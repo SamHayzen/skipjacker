@@ -1,9 +1,85 @@
-                █T1█//this first line just defines the desired playtime/sampletime ratio
-		  █R 1█ █F5█L 1.75  █M 1█S 1,F  █               █P FfFfF    /disk scratch
- A 1.75   █R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
- A 12.7835█R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG  
- A 23.814 █R32█ █F2█L 0.3436█M 1█S .5,F █S .25,G█S .25,H█P FGgGgGH /halve sampling length (L*M)
- A 34.8555█R16█ █F2█L 0.3436█M 1█S .5,F █S .25,G█S .25,H█P FGgGgGH /vocals start
- A 40.35  █R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG  
+                   █T1█//this first line just defines the desired playtime/sampletime ratio
+ 		  █R1 █M1█ █F5█L 1.75  █S 1,F  █               █P FfFfF    /disk scratch
+ A 1.75   █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG  
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R2 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+/measure
+		  █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG  
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R2 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+/measure
+		  █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG  
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R2 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+/measure
+		  █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG  
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R2 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+/measure
+ A 23.67  █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning vocals
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R3 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R1 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+		  
+          █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning vocals
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R3 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R1 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+		  
+          █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /beginning vocals
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R3 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R1 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+/measure
+		  █R1 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG   /final instrumental
+		  █R2 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG
+		  █R5 █M1█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FfFG  
+		  █R1 █M1█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG 
+		  █R1 █M2█ █F2█L 0.3425█S .5,F █S .5,G         █P FGgG  
+		  █R2 █M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG 
+		  █R2 █M1█ █F2█L 0.3425█S .25,F█S .75,G        █P FfFfFG  
+EOF
+ A 12.7835█R16█M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG  
+ A 23.814 █R32█M1█ █F2█L 0.3425█S .5,F █S .25,G█S .25,H█P FGgGgGH /halve sampling length (L*M)
+ A 34.8555█R16█M1█ █F2█L 0.3425█S .5,F █S .25,G█S .25,H█P FGgGgGH /vocals start
+ A 40.35  █R16█M2█ █F2█L 0.3425█S .75,F█S .25,G        █P FGgGgG  
 EOF 
  
