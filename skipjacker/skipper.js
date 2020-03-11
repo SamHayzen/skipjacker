@@ -139,7 +139,11 @@ function ruleListFromFile(path){
 		//log("  "+holdRules[i]);
 		holdRule = holdRules[i].split("/")[0];
 		if(holdRule == "") continue; //useless if it's empty
-		if(holdRule.toLowerCase().indexOf("eof")!==-1) break; //end of file
+		if(holdRule.toLowerCase().replace(/-| |\r|\t/g,'') == "eof") break; //end of file
+		if(holdRule.toLowerCase().replace(/-| |\r|\t/g,'') == "sof"){ //start of file
+			ret = [];
+			continue;
+		} //end of file
 		//log(templateStringToSkipRule(holdRule));
 		ret.push(templateStringToSkipRule(holdRule));
 	}
@@ -160,7 +164,7 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 		if(ruleList[rep].offset > 0) offset = ruleList[rep].offset+lastAbsolute;
 		if(ruleList[rep].desiredRatio>0) desiredRatio = ruleList[rep].desiredRatio;
 		
-		log(">Skipjacking @"+round(offset*100)/100+"sec for "+ruleList[rep].repeat+" reps w/ pattern \'"+ruleList[rep].pattern+"\' for "+round(ruleList[rep].repeat*ruleList[rep].playTime*100)/100+" seconds");
+		log(">Skipjacking @"+round(offset*1000)/1000+"sec for "+ruleList[rep].repeat+" reps w/ pattern \'"+ruleList[rep].pattern+"\' for "+round(ruleList[rep].repeat*ruleList[rep].playTime*100)/100+" seconds");
 		if(round((ruleList[rep].playTime/ruleList[rep].sampleTime)*100)/100 !== desiredRatio && ruleList[rep].playTime > 0) log("!WARNING: sample/playback time ratio does not match desired ratio\n$       ("+round((ruleList[rep].playTime/ruleList[rep].sampleTime)*100)/100+"/1 vs "+desiredRatio+"/1) This can destroy the track's time signature.");
 		outTrack.data = concatSegments(outTrack.data, skipPitchSegment(inTrack, ruleList[rep], offset));
 		offset+=ruleList[rep].sampleTime*ruleList[rep].repeat;
