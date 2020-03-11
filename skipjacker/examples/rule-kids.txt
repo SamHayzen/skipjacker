@@ -1,0 +1,18 @@
+			  █T1█/just declare desired ratio for redundancy
+		█R 4█ █F4█L 1.7975█  █S 1,F			 	 			  █P FfFf /kids screaming
+		
+ A 7.162█R 5█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ O 2.445█R 1█ █F4█L 0.49  █  █S .5,F  █S .25,G █S .25,H       █P FGgGgGgGHhHhHhH /quick notes
+ O 2.930█R 3█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ O 4.430█R 7█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ A 15.04█R 5█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ O 2.445█R 1█ █F4█L 0.49  █  █S .5,F  █S .25,G █S .25,H       █P FGgGgGgGHhHhHhH /quick notes
+ O 2.930█R 3█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ O 4.430█R 4█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+		█R 3█ █F4█L 0.49  █  █S .25,F █S .25,G █S .25,H█S.25,J█P FGgGgGgGHJjJjJjJ /keep the drums	
+		
+ A 22.94█R 5█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG /I don't know why it gets so rough here
+ O 2.445█R 1█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG /it's not my speeding algorithm, I tested.
+ O 2.930█R 3█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+ O 4.430█R 7█ █F4█L 0.49  █  █S .5,F  █S .5,G  				  █P FGgGgGgG
+EOF

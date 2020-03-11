@@ -1,0 +1,9 @@
+                █T1█//this first line just defines the desired playtime/sampletime ratio
+		  █R 1█ █F5█L 1.75  █M 1█S 1,F  █               █P FfFfF    /disk scratch
+ A 1.75   █R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG   /beginning instrumental
+ A 12.7835█R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG  
+ A 23.814 █R32█ █F2█L 0.3436█M 1█S .5,F █S .25,G█S .25,H█P FGgGgGH /halve sampling length (L*M)
+ A 34.8555█R16█ █F2█L 0.3436█M 1█S .5,F █S .25,G█S .25,H█P FGgGgGH /vocals start
+ A 40.35  █R16█ █F2█L 0.3436█M 2█S .75,F█S .25,G        █P FGgGgG  
+EOF 
+ 

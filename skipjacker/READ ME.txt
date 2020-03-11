@@ -1,0 +1,7 @@
+This program requires NodeJS.  If you don't have it, it won't run.
+https://nodejs.org/en/
+
+Yes, I know, I shouldnt've made hecking audio processing software in Node, but I made this for fun.
+
+
+By running the .BATs starting with "example", it will make some examples w/ pre-prepared samples and patterns
