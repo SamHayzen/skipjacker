@@ -1,0 +1,162 @@
+E 44100
+T1
+
+        █R 1█ █F2█   █L 2.279 █S 1,F						  █P FF /silence
+ A 2.279█R 1█ █F2█   █L 0.281 █S 0.5,F █S 0.5,G			 	  █P FfFG /strum
+
+        █R24█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /thirty pictures
+        █R12█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /is there any better
+ 	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG
+		
+        █R20█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /34 little rules for making lust
+        █R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /the purple poison that I 
+ 	    █R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /kissed
+
+        █R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FGgG /you're a mess
+        █R12█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /these inhibitions
+        █R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /don't feel the same
+ 	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+		
+        █R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FGgG /you're a mess
+        █R12█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /these tentacles
+        █R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /don't feel ashamed
+ 	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG
+
+ A 53.7 █R15█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /oh confidence exudes
+		█R 4█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /gotta love that attitude
+		█R 1█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+        █R28█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /shudder from the shudder shut up and make me glad that I did this
+  	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /with you
+
+ A 66.9 █R 3█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /bwooooom
+		█R 6█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /I gotta know I 
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /gotta know
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /maybe we
+        █R 2█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /should lose
+		█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /control
+ 	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG
+ 	    █R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /animate me
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /'cuz I got no soul
+        █R 2█ █F2█M 1█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+        /24r
+		█R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /oooooooooh baby I'm in the
+		█R 2█ █F2█M 1█L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /zone
+		█R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /make your move and watch the camera
+		█R 2█ █F2█M 1█L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /roll
+		/22r
+		█R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /Add another keyframe and make me mo-
+		█R 2█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /-oa-
+		█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /-oa-
+		█R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			  	  █P FGgG /-oan
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG
+		█R12█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /baby I'm in the zone
+		//18r
+
+ A 94.16█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /long solo
+		█R26█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /long solo
+		█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /long solo
+        █R10█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /fillin' ditches for the gap
+		█R 4█ █F2█   █L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /in your 
+		█R13█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /brezier (how spell) but mine just wasn't
+		█R 6█ █F2█   █L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /enough
+
+		█R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG /slow it down
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG /make this mo-
+		█R 8█ █F2█M.5█L 0.400 █S 0.25,F█S 0.25,G█S 0.5,H	  █P FfFGgGH /-ment last
+		█R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG /aiiyeaah
+		█R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG /aiiyeaah
+		█R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG
+
+ A126.96█R19█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G				  █P FfFG /just please don't call it love
+        █R17█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FGgG /you're a mess
+        █R12█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /flickin' sheets and sketchin' the scene
+        █R14█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /all of these strokes that you do
+ 	    █R 2█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+
+        █R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FGgG /you're a mess
+        █R12█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /you were scarlet I was still green
+        █R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /an artist through and through
+ 	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+
+H -0.06 █R15█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /oh confidence exudes
+		█R 4█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /gotta love that attitude
+		█R 1█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+        █R28█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /shudder from the shutter shut up and make me glad that I did this
+  	    █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /with you
+
+		█R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /bwooooom
+		█R 6█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /I gotta know I 
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /gotta know
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /maybe we should lose
+        █R 2█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /control
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG 
+ 	    █R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /animate me
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /'cuz I got 
+        █R 2█ █F2█M 1█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /no soul
+
+		█R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /oooooooooh baby I'm in the
+		█R 2█ █F2█M 1█L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /zone
+		█R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /make your move and watch the camera
+		█R 4█ █F2█M 1█L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /roll
+		
+		█R14█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /Add another keyframe and make me mo-
+		█R 2█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /-oa-
+		█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /-oa-
+		█R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			  	  █P FGgG /-oan
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG
+		█R12█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /baby I'm in the zone
+H 0
+		█R 8█ █F2█M 2█L 0.400 █S 0.25,F█S 0.25,G█S 0.5,H	  █P FfFGgGH /long solo
+		█R12█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /long solo
+		█R 1█ █F2█M 2█L 0.400 █S 0.25,F█S 0.25,G█S 0.5,H	  █P FfFGgGH /long solo
+
+        █R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /muttering
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /your name out I'm
+        █R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /stuttering
+		█R10█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /mind goes blank it's
+        █R 4█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /glorious
+        █R 8█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /And without a care I felt you there
+
+		█R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+        █R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /I gotta
+        █R 2█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /kno-
+        █R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /-o-
+        █R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FGgG /-ow
+H -0.06
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+        █R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FGgG /Animate
+        █R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /me cuz
+        █R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /I got no
+        █R 2█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /soul
+		
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+		█R 3█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /baby I'm in the zone
+		█R 6█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /baby I'm in the zone
+		█R20█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /make your move and watch the camera
+		█R 4█ █F2█   █L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /roll
+		█R38█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /Add another keyframe and make me moan!
+
+		█R 5█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+		█R 1█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+		█R28█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /Yeah we should lose control (I'm a mess I'm a mess I'm a mess)
+		
+		█R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /You're a mess I'm a mess so baby
+		█R 4█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /I'm in the zone
+		█R16█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /make your move and watch the camera
+		█R 4█ █F2█   █L 0.400 █S 0.25,F█S 0.75,G			  █P FfFfFG /roll
+
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /stare into the lense
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /now we just ain't friends
+		█R 4█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /you
+		█R 1█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /know
+		█R 2█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+		█R12█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G			 	  █P FfFG /baby I'm in the zone
+		
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /muttering
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /your name out I'm (oo-o-ooh)
+        █R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /stuttering
+		█R 8█ █F2█M.5█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /mind goes blank it's (baby I'm in the)
+        █R16█ █F2█   █L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG /glorious (zone)
+        █R16█ █F2█M 2█L 0.400 █S 0.5,F █S 0.5,G 			  █P FfFG
+		
+eof
