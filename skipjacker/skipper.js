@@ -5,18 +5,46 @@ process.stdin.setRawMode(true);
 
 //global variables
 var lastAbsolute = 0;
+var lastShift = 0;
 var desiredRatio = 1;
 var inFile = "in.wav";
 var outFile = "out.wav";
 var ruleFile = "rule.txt";
+var exportSampleRate = 0;
+var quiet = false;
+
 var holdRules;
+
+var debug = false;
 
 if(process.argv[2]!==undefined){inFile = process.argv[2];}
 if(process.argv[3]!==undefined){ruleFile = process.argv[3];}
 if(process.argv[4]!==undefined){outFile = process.argv[4];}
 
+function pInt(inNum){
+	inNum = parseInt(inNum);
+	if(inNum == NaN) inNum = 0;
+	return inNum;
+}
+
+function pFloat(inNum){
+	inNum = parseFloat(inNum);
+	if(inNum == NaN) inNum = 0;
+	return inNum;
+}
+
 function log(text){
 	console.log(text);
+}
+
+function dlog(text){
+	if(debug) console.log(text);
+}
+
+function relog(text){
+	process.stdout.clearLine();
+	process.stdout.cursorTo(0);
+	process.stdout.write("$"+text);
 }
 
 Number.prototype.mod = function(n) {
@@ -25,13 +53,13 @@ Number.prototype.mod = function(n) {
 
 Array.prototype.insert = function(index, inary) {
 	while(inary.length){this.splice(++index, 0, inary.shift());}
-}; //thank you, https://web.archive.org/web/20090717035140if_/javascript.about.com/od/problemsolving/a/modulobug.htm
+};
 
 Array.prototype.replace = function(index, length, inary) {
 	var ret = this.splice(index, length); //delete
 	while(inary.length){this.splice(++index, 0, inary.shift());}
 	return ret; //you might want to keep what you deleted
-}; //thank you, https://web.archive.org/web/20090717035140if_/javascript.about.com/od/problemsolving/a/modulobug.htm
+};
 
 function round(num){//just makes things easier
 	return Math.round(num);
@@ -55,15 +83,21 @@ function splitUint8Array(array,pos){
 };
 
 function templateStringToSkipRule(inTemplate){
-	var holdTokens = inTemplate.replace(/-| |\r|\t/g,'').replace(/█/g,":").split(":");//remove all white spaces, dashes, and newlines and split by colons
+	inTemplate = inTemplate.replace(/ |\r|\t/g,'').replace(/█/g,":");
+	var holdTokens = inTemplate.split(":");//remove all white spaces and newlines and split by colons
+	var holdMult = 1;
 	var holdRule = {
 		flag:false,
 		iFlag:false,
+		quiet:false,
+		debug:false,
+		exportSampleRate:0,
 		repeat:1,
 		factor:1,
 		sampleTime:0,
 		playTime:0,
 		origin:-1,
+		shift:NaN,
 		offset:0,
 		desiredRatio:0,
 		samples:[],
@@ -80,25 +114,34 @@ function templateStringToSkipRule(inTemplate){
 				holdRule.samples.push([holdLength,holdArgs[1],holdArgs[1].toLowerCase()]);//get the sample length (in seconds), forward character, and backwards character
 			break;
 			case 'r'://repeat
-				holdRule.repeat = parseInt("0"+holdTokens[i].substr(1));
+				holdRule.repeat = pInt(holdTokens[i].substr(1));
 			break;
 			case 'f'://factor/frequency
-				holdRule.factor = parseInt("0"+holdTokens[i].substr(1));
+				holdRule.factor = pInt(holdTokens[i].substr(1));
 			break;
 			case 'l'://sample length
-				holdRule.sampleTime = parseFloat("0"+holdTokens[i].substr(1));
+				holdRule.sampleTime = pFloat(holdTokens[i].substr(1));
 			break;
 			case 'o'://offset (from last origin)
-				holdRule.offset = parseFloat("0"+holdTokens[i].substr(1));
+				holdRule.offset = pFloat(holdTokens[i].substr(1));
 			break;
 			case 'a'://absolute origin/align
-				holdRule.origin = parseFloat("0"+holdTokens[i].substr(1));
+				holdRule.origin = pFloat(holdTokens[i].substr(1));
+			break;
+			case 'h'://shift
+				holdRule.shift = pFloat(holdTokens[i].substr(1));
 			break;
 			case 'm'://multiplier
-				holdRule.sampleTime *= parseFloat("0"+holdTokens[i].substr(1));
+				holdMult = pFloat(holdTokens[i].substr(1));
 			break;
 			case 't'://sample/playback time ratio
-				holdRule.desiredRatio = parseFloat("0"+holdTokens[i].substr(1));
+				holdRule.desiredRatio = pFloat(holdTokens[i].substr(1));
+			break;
+			case 'e'://exported file sample rate
+				holdRule.exportSampleRate = pFloat(holdTokens[i].substr(1));
+			break;
+			case 'd'://enable debufg flag
+				holdRule.debug = true;
 			break;
 			case 'x'://flag
 				holdRule.flag = true;
@@ -106,8 +149,16 @@ function templateStringToSkipRule(inTemplate){
 			case 'i'://interval flag
 				holdRule.iFlag = true;
 			break;
+			case 'q'://silence toggle flag
+				holdRule.quiet = true;
+			break;
 			case 'p'://pattern
 				holdRule.pattern = holdTokens[i].substr(1);//remove first char from token
+			break;
+			case '':
+			break;
+			default:
+				log("unrecognized token header \'"+holdTokens[i].charAt(0)+"\' in rule \""+inTemplate+"\"");
 			break;
 		}
 	}
@@ -127,6 +178,10 @@ function templateStringToSkipRule(inTemplate){
 		holdRule.playTime = 0;
 		holdRule.sampleTime = 0;
 	}
+	holdRule.sampleTime *= holdMult;
+	holdRule.playTime *= holdMult;
+	for(var i = 0; i<holdRule.samples.length; i++){holdRule.samples[i][0]*=holdMult;} //multiply all the sample lengths by M
+	dlog(holdRule);
 	return holdRule;
 }
 
@@ -139,6 +194,7 @@ function ruleListFromFile(path){
 		//log("  "+holdRules[i]);
 		holdRule = holdRules[i].split("/")[0];
 		if(holdRule == "") continue; //useless if it's empty
+		if(holdRule.toLowerCase().replace(/-| |\r|\t/g,'') == "kill") process.exit(0); //kill the program
 		if(holdRule.toLowerCase().replace(/-| |\r|\t/g,'') == "eof") break; //end of file
 		if(holdRule.toLowerCase().replace(/-| |\r|\t/g,'') == "sof"){ //start of file
 			ret = [];
@@ -155,28 +211,51 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 	if(typeof offset !== 'number') offset = 0;
 	var totalTime = 0;
 	log("");
-	for(var rep = 0; rep < ruleList.length; rep++){
-		if(ruleList[rep].repeat==0) continue; //don't waste time processing it if its empty
-		if(ruleList[rep].origin >= 0){
-			lastAbsolute = ruleList[rep].origin;
-			offset = ruleList[rep].offset+lastAbsolute;
+	lastAbsolute = 0, lastShift = 0; desiredRatio = 1, exportSampleRate = 0, quiet = false, debug = false; //don't want these to stay between runs
+	for(var ruleNum = 0; ruleNum < ruleList.length; ruleNum++){
+		if(ruleList[ruleNum].origin >= 0){
+			lastAbsolute = ruleList[ruleNum].origin;
+			dlog("origin set at "+lastAbsolute+"sec");
 		}
-		if(ruleList[rep].offset > 0) offset = ruleList[rep].offset+lastAbsolute;
-		if(ruleList[rep].desiredRatio>0) desiredRatio = ruleList[rep].desiredRatio;
+		if(ruleList[ruleNum].offset > 0 || ruleList[ruleNum].origin >= 0) offset = ruleList[ruleNum].offset+lastAbsolute;
+		if(!isNaN(ruleList[ruleNum].shift)){
+			lastShift = ruleList[ruleNum].shift;
+			dlog("shift set at "+offset+"sec ("+lastShift+"sec)");
+		}
+		if(ruleList[ruleNum].exportSampleRate>0) exportSampleRate = ruleList[ruleNum].exportSampleRate;
+		if(ruleList[ruleNum].desiredRatio>0) desiredRatio = ruleList[ruleNum].desiredRatio;
+		if(ruleList[ruleNum].quiet) quiet = !quiet; //toggle quiet flag
+		if(ruleList[ruleNum].debug) debug = !debug; //toggle debug flag
+		if(ruleList[ruleNum].repeat==0) continue; //don't waste time processing it if its empty
 		
-		log(">Skipjacking @"+round(offset*1000)/1000+"sec for "+ruleList[rep].repeat+" reps w/ pattern \'"+ruleList[rep].pattern+"\' for "+round(ruleList[rep].repeat*ruleList[rep].playTime*100)/100+" seconds");
-		if(round((ruleList[rep].playTime/ruleList[rep].sampleTime)*100)/100 !== desiredRatio && ruleList[rep].playTime > 0) log("!WARNING: sample/playback time ratio does not match desired ratio\n$       ("+round((ruleList[rep].playTime/ruleList[rep].sampleTime)*100)/100+"/1 vs "+desiredRatio+"/1) This can destroy the track's time signature.");
-		outTrack.data = concatSegments(outTrack.data, skipPitchSegment(inTrack, ruleList[rep], offset));
-		offset+=ruleList[rep].sampleTime*ruleList[rep].repeat;
-		totalTime+=ruleList[rep].playTime*ruleList[rep].repeat;
+		if(quiet){
+			log(">Ignoring segment @"+round((offset+lastShift)*10000)/10000+"sec for ("+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*100)/100+"sec length)");
+		}else{
+			log(">Skipjacking @"+round((offset+lastShift)*10000)/10000+"sec for "+ruleList[ruleNum].repeat+" reps w/ pattern \'"+ruleList[ruleNum].pattern+"\' for "+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*10000)/10000+" seconds");
+			if(round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000 !== desiredRatio && ruleList[ruleNum].playTime > 0) log("!WARNING: sample/playback time ratio does not match desired ratio\n$       ("+round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000+"/1 vs "+desiredRatio+"/1) This can destroy the track's time signature.");
+			
+			outTrack.data = concatSegments(outTrack.data, skipPitchSegment(inTrack, ruleList[ruleNum], offset+lastShift));
+			totalTime+=ruleList[ruleNum].playTime*ruleList[ruleNum].repeat;
+		}
+		offset+=ruleList[ruleNum].sampleTime*ruleList[ruleNum].repeat;
+		
+		if(ruleList[ruleNum].flag || ruleList[ruleNum].iFlag) log("!Flagged segment");
 	}
-	log("\n!Done! Final track time is "+round(totalTime*100)/100+" seconds.\n");
+	if(exportSampleRate>0){
+		log("\n!Done! Final track time is "+round(totalTime*100)/100+" seconds. ("+round(totalTime*100*inTrack.getSampleRate()/exportSampleRate)/100+" seconds at "+exportSampleRate+"hz)\n");
+		outTrack.setSampleRate(exportSampleRate);
+	}else{
+		log("\n!Done! Final track time is "+round(totalTime*100)/100+" seconds.\n");
+	}
 }
 
 function skipPitchSegment(track, rule, offset){//track should be a WAVFile class.  Offset measured in seconds
 	var ret = [];
 	if(rule.flag || rule.iFlag) ret.unshift(99999999,-99999999);
 	for(var reps = 0; reps < rule.repeat; reps++){
+		process.stdout.clearLine();
+		process.stdout.cursorTo(0);
+		process.stdout.write("$rep "+(reps+1)+"/"+rule.repeat);
 		var holdSample = speedSegmentStereo(track.getSegment(offset,rule.sampleTime),rule.factor,true); //this gets the sample from the core track and speeds it up by the factor in the rule
 		offset+=rule.sampleTime; //advance to the next sample
 		var microSamples = [];//all the little bits that get skipped
@@ -207,6 +286,8 @@ function skipPitchSegment(track, rule, offset){//track should be a WAVFile class
 		if(rule.iFlag) ret.push(99999999,-99999999);
 	}
 	if(rule.flag) ret.push(99999999,-99999999);
+	process.stdout.clearLine();
+	process.stdout.cursorTo(0);
 	//console.log(ret);
 	return ret;
 }
@@ -351,6 +432,12 @@ function concatSegments(array1,array2){
 	return ret;
 }
 
+function appendSegments(array1,array2){
+	for(var i = 0; i<array2.length; i++){
+		array1.push(array2[i]);
+	}
+}
+
 class WAVFile {
 	constructor(inUint8Array){//give it raw WAV data
 		var holdDat = splitUint8Array(inUint8Array,44);
@@ -371,10 +458,11 @@ class WAVFile {
 		return getNumFromUint8Array(this.header,24,4);
 	}
 	setSampleRate(inRate){
-		setNumInUint8Array(this.header,inRate,24,4);
+		setNumInUint8Array(this.header,inRate,24,4);//sample rate value
+		setNumInUint8Array(this.header,inRate*this.getNumChannels()*this.getBytesPerSample(),28,4);//byte rate
 	}
 	updateSizeInHeaderToReflectData(){
-		setNumInUint8Array(this.header,this.data.length*this.getBytesPerSample(),40,4);//"data"chunk
+		setNumInUint8Array(this.header,this.data.length*this.getBytesPerSample(),40,4);//"data" chunk
 		setNumInUint8Array(this.header,this.data.length*this.getBytesPerSample()+36,4,4);//size in header
 	}
 	getSegment(start, length){//measured in seconds
@@ -386,6 +474,7 @@ class WAVFile {
 	}
 	saveToFile(path){
 		log(">Saving file \""+path+"\"...");
+		this.updateSizeInHeaderToReflectData();
 		fs.writeFile(path, concatUint8Arrays(this.header,this.getDataAsUint8Array()), function(err) {
 			if(err) {
 				return console.log(err);
