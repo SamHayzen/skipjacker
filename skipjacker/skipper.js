@@ -11,11 +11,15 @@ var inFile = "in.wav";
 var outFile = "out.wav";
 var ruleFile = "rule.txt";
 var exportSampleRate = 0;
+var sampleCoefficient = 1;
 var quiet = false;
 
 var holdRules;
 
 var debug = false;
+var JSONFileExists;
+
+var markers = [];
 
 if(process.argv[2]!==undefined){inFile = process.argv[2];}
 if(process.argv[3]!==undefined){ruleFile = process.argv[3];}
@@ -65,9 +69,20 @@ function round(num){//just makes things easier
 	return Math.round(num);
 };
 
+function addMarker(name, time){
+	markers.push([name, time]);
+}
+
+function getMarkerTime(name){
+	for(var i = 0; i < markers.length; i++) if(name == markers[i][0]) return markers[i][1];
+	log("!Error! Unknown marker \""+name+"\", defaulting to 0 sec");
+	return 0;
+}
+
 function fileToUint8Array(path){
 	var retdat;
 	retdat = Uint8Array.from(fs.readFileSync(path));
+	log("!File opened");
 	return retdat;
 };
 
@@ -91,7 +106,11 @@ function templateStringToSkipRule(inTemplate){
 		iFlag:false,
 		quiet:false,
 		debug:false,
+		isGap:false,
+		advance:0,
 		exportSampleRate:0,
+		markerMode: -1, //-1 - none, 0 - set, 1 - goto
+		markerName: "",
 		repeat:1,
 		factor:1,
 		sampleTime:0,
@@ -109,7 +128,7 @@ function templateStringToSkipRule(inTemplate){
 			case 's':
 				holdArgs = holdTokens[i].substr(1).split(","); //remove first "S" and split by commas
 				if(holdArgs[1]==undefined) holdArgs[1]="F";
-				holdLength = parseFloat("0"+holdArgs[0]);
+				holdLength = pFloat(holdArgs[0]);
 				holdLength *= holdRule.sampleTime;
 				holdRule.samples.push([holdLength,holdArgs[1],holdArgs[1].toLowerCase()]);//get the sample length (in seconds), forward character, and backwards character
 			break;
@@ -134,13 +153,16 @@ function templateStringToSkipRule(inTemplate){
 			case 'm'://multiplier
 				holdMult = pFloat(holdTokens[i].substr(1));
 			break;
+			case 'c'://coefficient -- it's fine that this is set here even though it's global
+				sampleCoefficient = pFloat(holdTokens[i].substr(1));
+			break;
 			case 't'://sample/playback time ratio
 				holdRule.desiredRatio = pFloat(holdTokens[i].substr(1));
 			break;
 			case 'e'://exported file sample rate
 				holdRule.exportSampleRate = pFloat(holdTokens[i].substr(1));
 			break;
-			case 'd'://enable debufg flag
+			case 'u'://enable debug flag
 				holdRule.debug = true;
 			break;
 			case 'x'://flag
@@ -152,8 +174,22 @@ function templateStringToSkipRule(inTemplate){
 			case 'q'://silence toggle flag
 				holdRule.quiet = true;
 			break;
+			case 'g'://section is a silent gap
+				holdRule.isGap = true;
+			break;
+			case 'd'://section should advance the read offset by its length
+				holdRule.advance = pFloat(holdTokens[i].substr(1));
+			break;
 			case 'p'://pattern
 				holdRule.pattern = holdTokens[i].substr(1);//remove first char from token
+			break;
+			case '!'://set marker
+				holdRule.markerName = holdTokens[i].substr(1);//remove first char from token
+				holdRule.markerMode = 0;
+			break;
+			case '>'://goto marker
+				holdRule.markerName = holdTokens[i].substr(1);//remove first char from token
+				holdRule.markerMode = 1;
 			break;
 			case '':
 			break;
@@ -178,9 +214,10 @@ function templateStringToSkipRule(inTemplate){
 		holdRule.playTime = 0;
 		holdRule.sampleTime = 0;
 	}
-	holdRule.sampleTime *= holdMult;
-	holdRule.playTime *= holdMult;
-	for(var i = 0; i<holdRule.samples.length; i++){holdRule.samples[i][0]*=holdMult;} //multiply all the sample lengths by M
+	holdRule.sampleTime *= holdMult * sampleCoefficient;
+	holdRule.playTime *= holdMult * sampleCoefficient;
+	holdRule.advance *= sampleCoefficient;
+	for(var i = 0; i<holdRule.samples.length; i++){holdRule.samples[i][0]*=holdMult * sampleCoefficient;} //multiply all the sample lengths by M * C
 	dlog(holdRule);
 	return holdRule;
 }
@@ -211,7 +248,7 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 	if(typeof offset !== 'number') offset = 0;
 	var totalTime = 0;
 	log("");
-	lastAbsolute = 0, lastShift = 0; desiredRatio = 1, exportSampleRate = 0, quiet = false, debug = false; //don't want these to stay between runs
+	lastAbsolute = 0, lastShift = 0; desiredRatio = 1, exportSampleRate = 0, sampleCoefficient = 1, quiet = false, debug = false, markers = []; //don't want these to stay between runs
 	for(var ruleNum = 0; ruleNum < ruleList.length; ruleNum++){
 		if(ruleList[ruleNum].origin >= 0){
 			lastAbsolute = ruleList[ruleNum].origin;
@@ -225,21 +262,34 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 		if(ruleList[ruleNum].exportSampleRate>0) exportSampleRate = ruleList[ruleNum].exportSampleRate;
 		if(ruleList[ruleNum].desiredRatio>0) desiredRatio = ruleList[ruleNum].desiredRatio;
 		if(ruleList[ruleNum].quiet) quiet = !quiet; //toggle quiet flag
-		if(ruleList[ruleNum].debug) debug = !debug; //toggle debug flag
-		if(ruleList[ruleNum].repeat==0) continue; //don't waste time processing it if its empty
+		if(ruleList[ruleNum].debug) debug = true; //enable debug
+		
+		if(ruleList[ruleNum].markerMode == 0) addMarker(ruleList[ruleNum].markerName, offset);
+		if(ruleList[ruleNum].markerMode == 1) offset = getMarkerTime(ruleList[ruleNum].markerName);
+		
+		if(ruleList[ruleNum].repeat < 1) continue; //don't waste time processing it if its empty
 		
 		if(quiet){
 			log(">Ignoring segment @"+round((offset+lastShift)*10000)/10000+"sec for ("+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*100)/100+"sec length)");
 		}else{
-			log(">Skipjacking @"+round((offset+lastShift)*10000)/10000+"sec for "+ruleList[ruleNum].repeat+" reps w/ pattern \'"+ruleList[ruleNum].pattern+"\' for "+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*10000)/10000+" seconds");
-			if(round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000 !== desiredRatio && ruleList[ruleNum].playTime > 0) log("!WARNING: sample/playback time ratio does not match desired ratio\n$       ("+round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000+"/1 vs "+desiredRatio+"/1) This can destroy the track's time signature.");
-			
-			outTrack.data = concatSegments(outTrack.data, skipPitchSegment(inTrack, ruleList[ruleNum], offset+lastShift));
-			totalTime+=ruleList[ruleNum].playTime*ruleList[ruleNum].repeat;
+			if(ruleList[ruleNum].isGap){
+				log(">Adding gap @"+round((offset+lastShift)*10000)/10000+"sec for "+round(ruleList[ruleNum].sampleTime*ruleList[ruleNum].repeat*10000)/10000+" seconds");
+				
+				outTrack.data = concatSegments(outTrack.data, generateSilentSegment(ruleList[ruleNum].sampleTime*ruleList[ruleNum].repeat, inTrack.getSampleRate(), inTrack.getNumChannels()));
+				totalTime+=ruleList[ruleNum].playTime*ruleList[ruleNum].repeat;
+			}else{
+				log(">Skipjacking @"+round((offset+lastShift)*10000)/10000+"sec for "+ruleList[ruleNum].repeat+" reps w/ pattern \'"+ruleList[ruleNum].pattern+"\' for "+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*10000)/10000+" seconds");
+				if(round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000 !== desiredRatio && ruleList[ruleNum].playTime > 0) log("!WARNING: sample/playback time ratio does not match desired ratio\n$       ("+round((ruleList[ruleNum].playTime/ruleList[ruleNum].sampleTime)*10000)/10000+"/1 vs "+desiredRatio+"/1) This can destroy the track's time signature.");
+				
+				outTrack.data = concatSegments(outTrack.data, skipPitchSegment(inTrack, ruleList[ruleNum], offset+lastShift));
+				totalTime+=ruleList[ruleNum].playTime*ruleList[ruleNum].repeat;
+			}
 		}
-		offset+=ruleList[ruleNum].sampleTime*ruleList[ruleNum].repeat;
+		if(!ruleList[ruleNum].isGap) offset+=ruleList[ruleNum].sampleTime*ruleList[ruleNum].repeat;
 		
 		if(ruleList[ruleNum].flag || ruleList[ruleNum].iFlag) log("!Flagged segment");
+		
+		if(ruleList[ruleNum].advance > 0) offset+=ruleList[ruleNum].advance;
 	}
 	if(exportSampleRate>0){
 		log("\n!Done! Final track time is "+round(totalTime*100)/100+" seconds. ("+round(totalTime*100*inTrack.getSampleRate()/exportSampleRate)/100+" seconds at "+exportSampleRate+"hz)\n");
@@ -261,13 +311,21 @@ function skipPitchSegment(track, rule, offset){//track should be a WAVFile class
 		var microSamples = [];//all the little bits that get skipped
 		var holdPosition = 0;//holds the start position of subsequent microsamples within the sample
 		for(var i = 0; i<rule.samples.length; i++){
-			microSamples.push({
-				sample:getSegmentSection(holdSample, holdPosition/rule.factor,rule.samples[i][0]/rule.factor,track.getSampleRate(),track.getNumChannels()),//samples[n][0] points to length of microsample of nth sample token
-				foreChar:rule.samples[i][1],
-				backChar:rule.samples[i][2],
-			});
+			if(rule.samples[i][0]<0){
+				microSamples.push({//if it's negative, just fill the same amount of time with silence
+					sample:generateSilentSegment((rule.samples[i][0]/rule.factor)*-1,track.getSampleRate(),track.getNumChannels()),//samples[n][0] points to length of microsample of nth sample token
+					foreChar:rule.samples[i][1],
+					backChar:rule.samples[i][2],
+				});
+			}else{
+				microSamples.push({
+					sample:getSegmentSection(holdSample, holdPosition/rule.factor,rule.samples[i][0]/rule.factor,track.getSampleRate(),track.getNumChannels()),//samples[n][0] points to length of microsample of nth sample token
+					foreChar:rule.samples[i][1],
+					backChar:rule.samples[i][2],
+				});
+				holdPosition+=rule.samples[i][0];
+			}
 			
-			holdPosition+=rule.samples[i][0];
 		}
 		var holdPattern, holdSampleChar;
 		
@@ -298,6 +356,14 @@ function getSegmentSection(segment, start, length, sampleRate, numChannels){//me
 	length = round((length*sampleRate)/2)*2*numChannels; //div by two to make sure we don't flip L/R channels
 	for(var i = start; i<start+length; i++) holdSeg.push(segment[i]);
 	return holdSeg;
+}
+
+function generateSilentSegment(length, sampleRate, numChannels){
+	if(typeof numChannels !== 'number') numChannels = 1;
+	var ret = [];
+	var numSamples = round(length*sampleRate)*numChannels;
+	for(var i = 0; i < numSamples; i++) ret.push(0);
+	return ret;
 }
 
 function reverseSegment(segment, numChannels){
@@ -440,10 +506,32 @@ function appendSegments(array1,array2){
 
 class WAVFile {
 	constructor(inUint8Array){//give it raw WAV data
-		var holdDat = splitUint8Array(inUint8Array,44);
-		this.header = holdDat[0];
-		var holdBitrate = this.getBytesPerSample();
-		this.data = WAVRawToSampleArray(holdDat[1],holdBitrate);
+		if(inUint8Array == undefined){
+			this.header = new Uint8Array(44);
+			this.data = [];
+		}else{
+			var holdDat = splitUint8Array(inUint8Array,44);
+			this.header = holdDat[0];
+			var holdBitrate = this.getBytesPerSample();
+			this.data = WAVRawToSampleArray(holdDat[1],holdBitrate);
+		}
+	}
+	copyFrom(inWAVObj){
+		this.copyHeader(inWAVObj);
+		this.data = [];
+		for(var i = 0; i < inWAVObj.data.length; i++) this.data[i] = inWAVObj.data; //copy header
+	}
+	copyHeader(inWAVObj){
+		for(var i = 0; i < 44; i++) this.header[i] = inWAVObj.header[i]; //copy header
+	}
+	saveToJSON(fileName){
+		fs.writeFile(fileName, JSON.stringify({header:this.header, data:this.data}));
+	}
+	loadFromJSON(fileName){
+		var fileData = JSON.parse(fs.readFileSync(fileName));
+		this.copyHeader(fileData); //copy header
+		this.data = fileData.data;
+		this.updateSizeInHeaderToReflectData();
 	}
 	getBytesPerSample(){
 		return getNumFromUint8Array(this.header,34,2)/8;
@@ -502,10 +590,28 @@ process.stdin.resume();
 
 if(inFile.split(".")[1].toLowerCase()!=="wav") log("!WARNING! This program only handles integer WAV files.  It will likely just corrupt anything else.");
 
-log(">Opening source file \""+inFile+"\"...");
-var inWAV = new WAVFile(fileToUint8Array(inFile));
-var outWAV = new WAVFile(fileToUint8Array(inFile));
-log("!File opened");
+var inWav, outWav;
+
+log(">Looking for preformatted JSON file");
+if(fs.existsSync(inFile+".json")){
+	log("!Found prefomatted JSON audio file");
+	log(">Opening JSON file \""+inFile+".JSON\"...");
+	inWAV = new WAVFile();
+	inWAV.loadFromJSON(inFile+".JSON");
+	outWAV = new WAVFile();
+}else{
+	log("!No preformatted JSON file of audio detected");
+	log(">Opening source WAV file \""+inFile+"\"...");
+	inWAV = new WAVFile(fileToUint8Array(inFile));
+	outWAV = new WAVFile();
+	log(">Saving audio data to .JSON for faster future access...");
+	inWAV.saveToJSON(inFile+".JSON");
+	log("!Saving preformatted JSON as "+inFile+".JSON in the background");
+}
+log("!Done fetching audio data");
+outWAV.copyHeader(inWAV);
+outWAV.updateSizeInHeaderToReflectData();
+
 Do();
 process.stdin.on('keypress', function (chunk, key) {
 	Do();
