@@ -12,6 +12,7 @@ var outFile = "out.wav";
 var ruleFile = "rule.txt";
 var exportSampleRate = 0;
 var sampleCoefficient = 1;
+var depoppingSensitivity = 0;
 var quiet = false;
 
 var holdRules;
@@ -54,6 +55,19 @@ function relog(text){
 Number.prototype.mod = function(n) {
     return ((this%n)+n)%n;
 }; //thank you, https://web.archive.org/web/20090717035140if_/javascript.about.com/od/problemsolving/a/modulobug.htm
+
+Number.prototype.abs = function(n) {
+    if(this < 0) return this*-1;
+	return this;
+};
+
+Number.prototype.sign = function(n) {
+    if(this){
+		return this/this.abs();
+	}else{
+		return this;
+	}
+};
 
 Array.prototype.insert = function(index, inary) {
 	while(inary.length){this.splice(++index, 0, inary.shift());}
@@ -109,6 +123,7 @@ function templateStringToSkipRule(inTemplate){
 		isGap:false,
 		advance:0,
 		exportSampleRate:0,
+		depoppingSensitivity:NaN,
 		markerMode: -1, //-1 - none, 0 - set, 1 - goto
 		markerName: "",
 		repeat:1,
@@ -161,6 +176,9 @@ function templateStringToSkipRule(inTemplate){
 			break;
 			case 'e'://exported file sample rate
 				holdRule.exportSampleRate = pFloat(holdTokens[i].substr(1));
+			break;
+			case 'n'://depopping sensitivity
+				holdRule.depoppingSensitivity = pFloat(holdTokens[i].substr(1));
 			break;
 			case 'u'://enable debug flag
 				holdRule.debug = true;
@@ -248,7 +266,7 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 	if(typeof offset !== 'number') offset = 0;
 	var totalTime = 0;
 	log("");
-	lastAbsolute = 0, lastShift = 0; desiredRatio = 1, exportSampleRate = 0, sampleCoefficient = 1, quiet = false, debug = false, markers = []; //don't want these to stay between runs
+	lastAbsolute = 0, lastShift = 0, depoppingSensitivity = 0, desiredRatio = 1, exportSampleRate = 0, sampleCoefficient = 1, quiet = false, debug = false, markers = []; //don't want these to stay between runs
 	for(var ruleNum = 0; ruleNum < ruleList.length; ruleNum++){
 		if(ruleList[ruleNum].origin >= 0){
 			lastAbsolute = ruleList[ruleNum].origin;
@@ -260,6 +278,7 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 			dlog("shift set at "+offset+"sec ("+lastShift+"sec)");
 		}
 		if(ruleList[ruleNum].exportSampleRate>0) exportSampleRate = ruleList[ruleNum].exportSampleRate;
+		if(!isNaN(ruleList[ruleNum].depoppingSensitivity)) depoppingSensitivity = ruleList[ruleNum].depoppingSensitivity;
 		if(ruleList[ruleNum].desiredRatio>0) desiredRatio = ruleList[ruleNum].desiredRatio;
 		if(ruleList[ruleNum].quiet) quiet = !quiet; //toggle quiet flag
 		if(ruleList[ruleNum].debug) debug = true; //enable debug
@@ -267,7 +286,7 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 		if(ruleList[ruleNum].markerMode == 0) addMarker(ruleList[ruleNum].markerName, offset);
 		if(ruleList[ruleNum].markerMode == 1) offset = getMarkerTime(ruleList[ruleNum].markerName);
 		
-		if(ruleList[ruleNum].repeat < 1) continue; //don't waste time processing it if its empty
+		if(ruleList[ruleNum].repeat < 1) continue; //don't waste time processing it if it's empty
 		
 		if(quiet){
 			log(">Ignoring segment @"+round((offset+lastShift)*10000)/10000+"sec for ("+round(ruleList[ruleNum].repeat*ruleList[ruleNum].playTime*100)/100+"sec length)");
@@ -290,6 +309,10 @@ function skipjackWholeTrack(inTrack, outTrack, ruleList, offset){
 		if(ruleList[ruleNum].flag || ruleList[ruleNum].iFlag) log("!Flagged segment");
 		
 		if(ruleList[ruleNum].advance > 0) offset+=ruleList[ruleNum].advance;
+	}
+	if(depoppingSensitivity >= 0){
+		log(">Applying depopping...");
+		depopSegment(outTrack.data,outTrack.getNumChannels(),depoppingSensitivity,outTrack.getSampleRate());
 	}
 	if(exportSampleRate>0){
 		log("\n!Done! Final track time is "+round(totalTime*100)/100+" seconds. ("+round(totalTime*100*inTrack.getSampleRate()/exportSampleRate)/100+" seconds at "+exportSampleRate+"hz)\n");
@@ -367,7 +390,7 @@ function generateSilentSegment(length, sampleRate, numChannels){
 }
 
 function reverseSegment(segment, numChannels){
-	while(segment.length/numChannels!==round(segment.length/numChannels)) segment.pop() //samples has to be devisable by channels
+	while(segment.length.mod(numChannels) !== 0) segment.pop() //samples has to be devisable by channels
 	var ret = [];
 	if(numChannels==2){
 		for(var i = segment.length-1; i>=0; i-=2){
@@ -401,6 +424,9 @@ function speedSegment(segment, factor, smooth){//sets the speed to 1/factor of t
 function speedSegmentStereo(segment, factor, smooth){//sets the speed to 1/factor of that of the original
 	var ret = [];
 	var holdVal = 0;
+	var isSilence = false;
+	if(segment[1] == 0) isSilence = true;
+	while((segment.length).mod(2*factor) !== 0) segment.pop();
 	for(var i = 0; i<segment.length; i+=factor*2){
 		if(smooth){
 			holdVal = 0;//right
@@ -415,6 +441,7 @@ function speedSegmentStereo(segment, factor, smooth){//sets the speed to 1/facto
 				holdVal+=segment[i+q];
 			}
 			holdVal/=factor; //average the data points
+			//if((holdVal == 0 || isNaN(holdVal) || typeof holdVal !== 'number') && !isSilence) log("Broken sample: "+holdVal);
 			ret.push(holdVal);
 		}else{
 			ret.push(segment[i]);
@@ -502,6 +529,26 @@ function appendSegments(array1,array2){
 	for(var i = 0; i<array2.length; i++){
 		array1.push(array2[i]);
 	}
+}
+
+function depopSegment(inseg,numChan,sensitivity,sampleRate){
+	if(sampleRate == undefined) sampleRate = 44100;
+	if(sensitivity == undefined) sensitivity = 0;
+	
+	var remCount = 0;
+	while(inseg.length.mod(numChan) !== 0) inseg.pop(); //make sure the number of samples is devisible by the number of audio channels
+	
+	for(var i = 0; i<inseg.length; i++) if(typeof inseg[i] !== 'number' || isNaN(inseg[i])) inseg[i] = 0;
+	for(var i = numChan; i<inseg.length-numChan; i++){
+		if(inseg[i] >= sensitivity*-1 && inseg[i] <= sensitivity){
+			if(inseg[i-numChan].sign() == inseg[i+numChan].sign()){
+				inseg[i] = (inseg[i-numChan] + inseg[i+numChan])/2; //average out the neighboring channels if sample is zero and both neighbors have the same sign
+				dlog("$removed pop at segment #"+round((i/numChan/sampleRate)*1000)/1000+" (channel "+(i.mod(numChan)+1)+")");
+				remCount++;
+			}
+		}
+	}
+	log("!removed "+remCount+" pops");
 }
 
 class WAVFile {
