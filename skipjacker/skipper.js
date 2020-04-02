@@ -543,7 +543,7 @@ function depopSegment(inseg,numChan,sensitivity,sampleRate){
 		if(inseg[i] >= sensitivity*-1 && inseg[i] <= sensitivity){
 			if(inseg[i-numChan].sign() == inseg[i+numChan].sign()){
 				inseg[i] = (inseg[i-numChan] + inseg[i+numChan])/2; //average out the neighboring channels if sample is zero and both neighbors have the same sign
-				dlog("$removed pop at segment #"+round((i/numChan/sampleRate)*1000)/1000+" (channel "+(i.mod(numChan)+1)+")");
+				dlog("$removed pop at segment @ "+round((i/numChan/sampleRate)*1000)/1000+"sec (channel "+(i.mod(numChan)+1)+")");
 				remCount++;
 			}
 		}
